@@ -1,1 +1,4 @@
-<p>countries works!</p>
+<h1>Countries</h1>
+<ul>
+  <li *ngFor="let country of (countries | async)">{{country.name}}</li>
+</ul>
