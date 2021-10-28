@@ -1,0 +1,33 @@
+<form [formGroup]="countriesForm">
+  <div>
+    <input
+      type="text"
+      id="country"
+      formControlName="country"
+      placeholder="Enter Country"
+    />
+  </div>
+  <div>
+    <input
+      type="text"
+      id="capital"
+      formControlName="capital"
+      placeholder="Enter Capital"
+    />
+    <div>
+      <input
+        type="number"
+        id="id"
+        formControlName="id"
+        placeholder="Enter ID"
+      />
+    </div>
+  </div>
+
+  <button (click)="addCountry()">Add Country</button>
+</form>
+
+<div *ngFor="let country of countries$ | async">
+  <p>{{ country.name }}</p>
+  <button (click)="deleteCountry(country.id)">Delete Country</button>
+</div>
