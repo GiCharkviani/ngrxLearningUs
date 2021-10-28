@@ -98,10 +98,7 @@ app.get("/api/countries", async (req, res, next) => {
   try {
     const countries = await Country.find();
     if (countries) {
-      return res.send({
-        message: "successfull",
-        countries: countries,
-      });
+      return res.send(countries);
     }
 
     res.status(404).send({ error: "Not found!" });
@@ -120,7 +117,7 @@ app.post('/api/countries', async (req, res, next) => {
       return res.status(400).send({error: "Not saved!"})
     }
 
-    res.send({message: "User added syccessfully", country: countrySaved})
+    res.send(countrySaved)
   } catch (e) {
     res.status(500).send({error: "Server error!"})
   }
@@ -134,7 +131,7 @@ app.delete("/api/countries/:id", async (req, res, next) => {
       return res.status(404).send({error: "Error, country not found!"})
     }
 
-    res.send({message: "User deleted successfully", deletedCountry: countryDeleted})
+    res.send(countryDeleted)
   } catch (error) {
     res.status(500).send({error: "Server error"})
   }

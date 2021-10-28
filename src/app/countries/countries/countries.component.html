@@ -1,4 +1,21 @@
-<h1>Countries</h1>
-<ul>
-  <li *ngFor="let country of (countries | async)">{{country.name}}</li>
+<h1 class="lead" style="text-align: center;">Countries</h1>
+<hr>
+
+<form [formGroup]="countryForms" (ngSubmit)="addForm()" class="form-grup container">
+  <input formControlName="name" class="form-control" type="text" placeholder="add country name">
+  <input formControlName="capital" class="form-control" type="text" placeholder="add country capital city">
+  <button class="btn btn-outline-success" type="submit" [disabled]="!countryForms.valid">Add Form</button>
+</form>
+
+<hr>
+
+<h1 class="lead text-secondary" style="text-align: center;">List of Countries</h1>
+
+<ul class="list-group container">
+  <li class="list-group-item" aria-current="true" *ngFor="let country of (countries$ | async)">{{country.name}} <button (click)="delete(country._id)" class="btn btn-danger" style="float: right;">Delete</button></li>
 </ul>
+
+
+<div *ngIf="errorMessage$ | async" class="alert alert-danger" role="alert">
+  {{ errorMessage$ | async}}
+</div>
