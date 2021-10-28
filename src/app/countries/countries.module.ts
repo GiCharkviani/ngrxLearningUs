@@ -1,18 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CountriesComponent } from './countries/countries.component';
-import { RouterModule } from '@angular/router';
-
-
+import { CountriesComponent } from './countries.component';
+import { CountriesRoutingModule } from './countries-routing.module';
 
 @NgModule({
-  declarations: [
-    CountriesComponent
-  ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild([{path: '', component: CountriesComponent}])
-  ],
-  exports: [RouterModule]
+  declarations: [CountriesComponent],
+  imports: [CommonModule, CountriesRoutingModule],
 })
-export class CountriesModule { }
+export class CountriesModule {}
