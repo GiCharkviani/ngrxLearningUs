@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { CountriesService } from './countries.service';
 import { Country } from './models/country.model';
 import { countriesSelector } from './store/countries.reducer';
 
@@ -17,18 +16,20 @@ export class CountriesComponent implements OnInit {
   countries$!: Observable<Country[]>;
   countriesForm!: FormGroup;
 
-  constructor(private store: Store<any>) {}
+  constructor(private store: Store<any>) {
+    this.countries$ = this.store.select(countriesSelector);
+  }
 
   ngOnInit() {
-    this.countries$ = this.store.select(countriesSelector);
+    // Load Countries
+    this.store.dispatch(CountriesActions.loadCountries());
 
+    // Form
     this.countriesForm = new FormGroup({
       country: new FormControl(null, Validators.required),
       capital: new FormControl(null, Validators.required),
       id: new FormControl(null, Validators.required),
     });
-
-    // this.countries$ = this.countriesService.getCountries();
   }
 
   addCountry() {
@@ -37,7 +38,7 @@ export class CountriesComponent implements OnInit {
       capital: this.countriesForm.value.capital,
       id: this.countriesForm.value.id,
     };
-    this.store.dispatch(CountriesActions.addCountry({ country }));
+    this.store.dispatch(CountriesActions.addCountry(country));
   }
 
   deleteCountry(id: number) {

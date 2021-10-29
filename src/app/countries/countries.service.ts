@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { map } from 'rxjs/operators';
+import { Country } from './models/country.model';
 import { Response } from './models/response.model';
 
 @Injectable({ providedIn: 'root' })
@@ -16,12 +17,10 @@ export class CountriesService {
     );
   }
 
-  addCountry() {
-    this.http
-      .post('http://localhost:3000/api/countries', {
-        name: 'Georgia',
-        capital: 'Tbilisi',
-      })
-      .subscribe();
+  addCountry(name: string | null, capital: string | null, id: number | null) {
+    return this.http.post<any>('http://localhost:3000/api/countries', {
+      name,
+      capital,
+    });
   }
 }

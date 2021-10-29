@@ -13,18 +13,7 @@ export interface CountriesState {
 }
 
 const initialState: CountriesState = {
-  countries: [
-    {
-      name: 'Germany',
-      capital: 'Berlin',
-      id: 0,
-    },
-    {
-      name: 'Spain',
-      capital: 'Madrid',
-      id: 1,
-    },
-  ],
+  countries: [],
 };
 
 // Selectors
@@ -39,7 +28,13 @@ export const countriesSelector = createSelector(
 // Reducer
 export const countriesReducer = createReducer<CountriesState>(
   initialState,
-  on(CountriesActions.addCountry, (state, action): CountriesState => {
+  on(CountriesActions.loadCountriesSuccess, (state, action): CountriesState => {
+    return {
+      ...state,
+      countries: action.countries,
+    };
+  }),
+  on(CountriesActions.addCountrySuccess, (state, action): CountriesState => {
     return {
       ...state,
       countries: [...state.countries, action.country],

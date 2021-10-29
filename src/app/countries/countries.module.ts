@@ -6,6 +6,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import { countriesReducer } from './store/countries.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { CountriesEffects } from './store/countries.effects';
 
 @NgModule({
   declarations: [CountriesComponent],
@@ -15,6 +17,7 @@ import { countriesReducer } from './store/countries.reducer';
     HttpClientModule,
     ReactiveFormsModule,
     StoreModule.forFeature('countries', countriesReducer),
+    EffectsModule.forFeature([CountriesEffects]),
   ],
 })
 export class CountriesModule {}
