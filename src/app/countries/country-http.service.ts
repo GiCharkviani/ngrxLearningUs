@@ -4,11 +4,7 @@ import { Observable } from 'rxjs';
 import { map, shareReplay, tap } from 'rxjs/operators';
 import { CountryModel } from './country.model';
 
-interface gotCountryInfo {
-  _id: string;
-  name: string;
-  capital: string;
-}
+
 
 @Injectable({ providedIn: 'root' })
 export class CountryHttpService {
@@ -20,16 +16,20 @@ export class CountryHttpService {
       );
   }
 
-  postCountry(country: CountryModel): Observable<gotCountryInfo> {
-    return this.http.post<gotCountryInfo>(
+  postCountry(country: CountryModel): Observable<CountryModel> {
+    return this.http.post<CountryModel>(
       'http://localhost:3000/api/countries',
       country
     ).pipe(shareReplay());
   }
 
   deleteCountry(countryId:string):Observable<string>{
-    return this.http.delete<gotCountryInfo>('http://localhost:3000/api/countries/'+countryId).pipe(
+    return this.http.delete<CountryModel>('http://localhost:3000/api/countries/'+countryId).pipe(
       map(deleted => deleted._id)
     )
+  }
+
+  editCountry(country: CountryModel): Observable<CountryModel>{
+    return this.http.patch<CountryModel>(`http://localhost:3000/api/countries/${country._id}`, country)
   }
 }

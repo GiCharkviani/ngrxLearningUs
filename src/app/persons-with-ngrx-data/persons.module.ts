@@ -2,17 +2,20 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PersonsComponent } from './persons/persons.component';
 import { RouterModule } from '@angular/router';
-import { StoreModule } from '@ngrx/store';
-import { PersonsReducer } from './store/persons.reducer';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { EffectsModule } from '@ngrx/effects';
-import { PersonsEffects } from './store/persons.effects';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import { EntityDefinitionService, EntityMetadataMap } from '@ngrx/data';
+import { PersonsEntityFactory } from './store/persons-data.service';
+import { PersonsResolver } from './store/persons.resolver';
+
+const entityMetadata: EntityMetadataMap = {
+  persons: {}
+}
 
 @NgModule({
   declarations: [
@@ -20,9 +23,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild([{path: '', component: PersonsComponent}]),
-    StoreModule.forFeature('persons', PersonsReducer),
-    EffectsModule.forFeature([PersonsEffects]),
+    RouterModule.forChild([{path: '', component: PersonsComponent, resolve: { persons: PersonsResolver }}]),
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
@@ -30,8 +31,17 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     MatButtonModule,
     MatDialogModule,
     MatInputModule,
-    DragDropModule
+    DragDropModule,
   ],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers:[PersonsEntityFactory, PersonsResolver]
 })
-export class PersonsModule { }
+export class PersonsNgrxDataModule {
+
+  constructor(private eds: EntityDefinitionService){
+
+    eds.registerMetadataMap(entityMetadata)
+
+  }
+
+}

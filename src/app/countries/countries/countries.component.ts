@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { CountryModel } from '../country.model';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { getCountries, getError, State } from '../store/country.reducer';
+import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { getCountries, getError, SelectCountry, State } from '../store/country.reducer';
 import * as CountryActions from '../store/country.actions';
 
 @Component({
@@ -14,10 +14,14 @@ import * as CountryActions from '../store/country.actions';
 })
 export class CountriesComponent implements OnInit {
   countries$!: Observable<CountryModel[]>;
+  selectedCountry$!:Observable<CountryModel | undefined>;
+
+  editing:boolean = false;
 
   countryForms!: FormGroup;
 
   errorMessage$!: Observable<string>;
+  selected:boolean = false;
 
   constructor(private store: Store<State>) {}
 
@@ -31,6 +35,8 @@ export class CountriesComponent implements OnInit {
     this.store.dispatch(CountryActions.StartedLoadingCountries());
     //selecting well
     this.countries$ = this.store.select(getCountries);
+    //select country
+    this.selectedCountry$ = this.store.select(SelectCountry)
 
     //error handler
     this.errorMessage$ = this.store.select(getError);
@@ -45,7 +51,22 @@ export class CountriesComponent implements OnInit {
     this.store.dispatch(CountryActions.StartedAddingCountry({ country }));
     this.countryForms.reset();
   }
-  delete(id:string){
+  delete(event:any,id:string){
     this.store.dispatch(CountryActions.StartedDeletingCountry({countryId: id}))
+  }
+  switchEdit(){
+    this.editing = !this.editing
+  }
+  selectCountry(id:string){
+    this.store.dispatch(CountryActions.SelectCountry({id}))
+  }
+  editCountry(editForm: NgForm, id:string){
+    const country:CountryModel = {
+      _id: id,
+      name: editForm.value.countryName,
+      capital: editForm.value.capital
+    }
+    this.store.dispatch(CountryActions.StartedEditingCountry({country}))
+    editForm.reset()
   }
 }

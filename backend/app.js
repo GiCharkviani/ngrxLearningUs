@@ -33,14 +33,14 @@ app.use((req, res, next) => {
 app.get("/api/persons", async (req, res, next) => {
   try {
     const persons = await Person.find();
-    if (persons) {
-      return res.send({
-        message: "successfull",
-        persons: persons,
-      });
+
+
+    if (!persons) {
+      res.status(404).send({ error: "Not found!" });
     }
 
-    res.status(404).send({ error: "Not found!" });
+    return res.send(persons);
+
   } catch (e) {
     res.status(500).send({ error: "Server Error!" });
   }
@@ -56,7 +56,7 @@ app.post('/api/persons', async (req, res, next) => {
       return res.status(400).send({error: "Not saved!"})
     }
 
-    res.send({message: "User added syccessfully", person: personSaved})
+    res.send(personSaved)
   } catch (e) {
     res.status(500).send({error: "Server error!"})
   }
@@ -70,7 +70,7 @@ app.delete("/api/persons/:id", async (req, res, next) => {
       return res.status(404).send({error: "Error, Person not found!"})
     }
 
-    res.send({message: "User deleted successfully", deletedUser: personDeleted})
+    res.send(personDeleted)
   } catch (error) {
     res.status(500).send({error: "Server error"})
   }
@@ -86,7 +86,7 @@ app.patch("/api/persons/:id", async (req, res) => {
       res.status(404).send({error: "Person not found!"})
     }
 
-    res.send(person)
+    res.send(updatedUser)
   } catch (error) {
     res.status(500).send({error: "Server Error!"})
   }
@@ -139,15 +139,18 @@ app.delete("/api/countries/:id", async (req, res, next) => {
 
 app.patch("/api/countries/:id", async (req, res) => {
   try {
-    const updatedCountry = req.body;
+    const updateCountry = {
+      name: req.body.name,
+      capital: req.body.capital
+    };
 
-    const country = await Country.findByIdAndUpdate(req.params.id, updatedCountry)
+    const country = await Country.findByIdAndUpdate(req.params.id, updateCountry);
 
     if(!country) {
       res.status(404).send({error: "country not found!"})
     }
 
-    res.send(country)
+    res.send(req.body)
   } catch (error) {
     res.status(500).send({error: "Server Error!"})
   }

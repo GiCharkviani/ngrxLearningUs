@@ -1,3 +1,1 @@
-export interface State {
-  persons: any
-}
+export interface State {}

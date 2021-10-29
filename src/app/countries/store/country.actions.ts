@@ -46,3 +46,24 @@ export const FailedDeletingCountry = createAction(
   '[Countries] Failed Deleting Country',
   props<{error: string}>()
 )
+
+
+//selecting Country
+export const SelectCountry = createAction(
+  '[Countries] Select Country',
+  props<{id: string}>()
+)
+
+//edit country
+export const StartedEditingCountry = createAction(
+  '[Countries] Started Editing Country',
+  props<{country: CountryModel}>()
+)
+export const SuccessEditingCountry = createAction(
+  '[Countries] Edited Country',
+  props<{country: CountryModel}>()
+)
+export const FailedEditingCountry = createAction(
+  '[Countries] Failed Editing Country',
+  props<{error: string}>()
+)
