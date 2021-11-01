@@ -2,8 +2,11 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { PersonModel } from '../person.model';
+import { getCount, PersonEntityState } from '../store/persons.reducer';
+import * as PersonsActions from '../store/persons.actions'
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { PersonsEntityFactory } from '../store/persons-data.service';
+import { getPersons } from '../store/persons.reducer';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-persons',
@@ -11,14 +14,16 @@ import { PersonsEntityFactory } from '../store/persons-data.service';
   styleUrls: ['./persons.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PersonsComponent implements OnInit {
+export class PersonsEntityComponent implements OnInit {
   persons$!: Observable<PersonModel[]>;
   addPersonForm!: FormGroup;
   selectedPerson$!: Observable<PersonModel | undefined>;
   editMode:boolean = false;
   errorMessage$!: Observable<string>;
 
-  constructor(private store: PersonsEntityFactory) { }
+  personsCount$!:Observable<number | string>;
+
+  constructor(private store: Store<PersonEntityState>) { }
 
   ngOnInit(): void {
     this.addPersonForm = new FormGroup({
@@ -27,8 +32,13 @@ export class PersonsComponent implements OnInit {
       age: new FormControl(null, Validators.required)
     })
 
-    this.store.entities$.subscribe(console.log)
+    this.store.dispatch(PersonsActions.startLoadingPersons());
 
+    this.persons$ = this.store.select(getPersons)
+
+    this.persons$.subscribe(res => console.log(res))
+
+    this.personsCount$ = this.store.select(getCount)
   }
 
   addPerson(){
@@ -38,14 +48,14 @@ export class PersonsComponent implements OnInit {
       surname: this.addPersonForm.value.surname,
       age: this.addPersonForm.value.age
     }
-
+    this.store.dispatch(PersonsActions.startAddingPerson({person}))
     this.addPersonForm.reset()
   }
 
 
   editing(person: PersonModel){
     this.editMode = false;
-
+    this.store.dispatch(PersonsActions.selectPerson({person}))
   }
 
 
@@ -58,10 +68,10 @@ export class PersonsComponent implements OnInit {
     }
     form.reset()
     this.editMode = true;
-
+    this.store.dispatch(PersonsActions.startUpdatingPerson({person: updatedPerson}))
   }
 
   deletePerson(id:string){
-
+    this.store.dispatch(PersonsActions.startDeletingPerson({id}))
   }
 }

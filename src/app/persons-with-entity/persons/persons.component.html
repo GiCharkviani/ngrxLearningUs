@@ -36,8 +36,9 @@
 <hr>
 
 <div class="row">
-  <div class="col-6">
-    <mat-expansion-panel hideToggle *ngFor="let person of persons$ | async" >
+  <div class="col-6" *ngIf="persons$ | async as personsData">
+    <div *ngIf="personsCount$ | async as count" class="text-center">Number of users: {{count}}</div>
+    <mat-expansion-panel hideToggle *ngFor="let person of personsData" >
       <mat-expansion-panel-header>
         <mat-panel-title>
           {{ person.name }}
