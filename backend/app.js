@@ -123,7 +123,7 @@ app.get("/api/countries", async (req, res, next) => {
 app.post("/api/countries", async (req, res, next) => {
   try {
     const country = new Country({
-      name: req.body.name,
+      country: req.body.country,
       capital: req.body.capital,
     });
 

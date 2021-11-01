@@ -1,33 +1,54 @@
-<form [formGroup]="countriesForm">
+<div class="countries-container">
   <div>
-    <input
-      type="text"
-      id="country"
-      formControlName="country"
-      placeholder="Enter Country"
-    />
-  </div>
-  <div>
-    <input
-      type="text"
-      id="capital"
-      formControlName="capital"
-      placeholder="Enter Capital"
-    />
-    <div>
-      <input
-        type="number"
-        id="id"
-        formControlName="id"
-        placeholder="Enter ID"
-      />
+    <form [formGroup]="countriesForm">
+      <div>
+        <input
+          type="text"
+          id="country"
+          formControlName="country"
+          placeholder="Enter Country"
+        />
+      </div>
+      <div>
+        <input
+          type="text"
+          id="capital"
+          formControlName="capital"
+          placeholder="Enter Capital"
+        />
+      </div>
+
+      <button (click)="addCountry()">Add Country</button>
+    </form>
+
+    <div *ngFor="let country of countries$ | async">
+      <p>{{ country.capital }}</p>
+      <!-- <button (click)="deleteCountry(country.id)">Delete Country</button> -->
+      <button (click)="editCountry(country)">Edit Country</button>
     </div>
   </div>
+  <div>
+    <div *ngIf="editClicked">
+      <form [formGroup]="editCountryForm">
+        <div>
+          <input
+            type="text"
+            id="name"
+            placeholder="Enter Country"
+            formControlName="country"
+          />
+        </div>
+        <div>
+          <input
+            type="text"
+            id="capital"
+            placeholder="Enter Capital"
+            formControlName="capital"
+          />
+        </div>
 
-  <button (click)="addCountry()">Add Country</button>
-</form>
-
-<div *ngFor="let country of countries$ | async">
-  <p>{{ country.name }}</p>
-  <button (click)="deleteCountry(country.id)">Delete Country</button>
+        <button (click)="onSave()">Save</button>
+      </form>
+    </div>
+  </div>
 </div>

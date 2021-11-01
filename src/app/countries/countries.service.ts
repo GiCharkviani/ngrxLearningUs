@@ -17,9 +17,16 @@ export class CountriesService {
     );
   }
 
-  addCountry(name: string | null, capital: string | null, id: number | null) {
+  addCountry(country: string | null, capital: string | null) {
     return this.http.post<any>('http://localhost:3000/api/countries', {
-      name,
+      country,
+      capital,
+    });
+  }
+
+  editCountry(_id: string, country: string, capital: string) {
+    return this.http.patch(`http://localhost:3000/api/persons/${_id}`, {
+      country,
       capital,
     });
   }

@@ -1,3 +1,13 @@
 form div {
   margin: 10px 0;
 }
+
+.countries-container {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.countries-container div {
+  width: 200px;
+}

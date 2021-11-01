@@ -20,6 +20,17 @@ export const addCountrySuccess = createAction(
   props<{ country: Country }>()
 );
 
+// Edit Country
+export const editCountry = createAction(
+  '[Countries Page] Edit Country',
+  props<{ country: Country }>()
+);
+
+export const editCountrySuccess = createAction(
+  '[Countries Page] Edit Country Success',
+  props<{ country: Country }>()
+);
+
 // Delete Country
 export const deleteCountry = createAction(
   '[Countries Page] Delete Country',

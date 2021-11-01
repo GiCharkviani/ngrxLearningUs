@@ -31,14 +31,41 @@ export class CountriesEffects {
     this.actions$.pipe(
       ofType(CountriesActions.addCountry),
       mergeMap((action) =>
-        this.countriesService
-          .addCountry(action.name, action.capital, action.id)
-          .pipe(
-            map((res) =>
-              CountriesActions.addCountrySuccess({ country: res.country })
-            )
+        this.countriesService.addCountry(action.country, action.capital).pipe(
+          tap((res) => console.log(res)),
+          map((res) =>
+            CountriesActions.addCountrySuccess({ country: res.country })
           )
+        )
       )
     )
   );
+
+  // editCountry$ = createEffect(() =>
+  //   this.actions$.pipe(
+  //     ofType(CountriesActions.editCountry),
+  //     mergeMap((action) =>
+  //       this.countriesService
+  //         .editCountry(action._id, action.capital)
+  //         .pipe(
+  //           map((res) =>
+  //             CountriesActions.addCountrySuccess({ country: res.country })
+  //           )
+  //         )
+  //     )
+  //   )
+  // );
+
+  // editCountry$ = createEffect(() =>
+  //   this.actions$.pipe(
+  //     ofType(CountriesActions.editCountry),
+  //     mergeMap((action) =>
+  //       this.countriesService
+  //         .editCountry(action._id, action.name, action.capital)
+  //         .pipe((res) =>
+  //           CountriesActions.editCountrySuccess({ country: res.country })
+  //         )
+  //     )
+  //   )
+  // );
 }

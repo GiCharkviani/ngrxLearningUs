@@ -39,13 +39,13 @@ export const countriesReducer = createReducer<CountriesState>(
       ...state,
       countries: [...state.countries, action.country],
     };
-  }),
-  on(CountriesActions.deleteCountry, (state, action): CountriesState => {
-    return {
-      ...state,
-      countries: [
-        ...state.countries.filter((country) => country.id !== action.id),
-      ],
-    };
   })
+  // on(CountriesActions.deleteCountry, (state, action): CountriesState => {
+  //   return {
+  //     ...state,
+  //     countries: [
+  //       ...state.countries.filter((country) => country.id !== action.id),
+  //     ],
+  //   };
+  // })
 );
