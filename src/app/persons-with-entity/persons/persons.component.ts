@@ -6,7 +6,7 @@ import { getCount, PersonEntityState } from '../store/persons.reducer';
 import * as PersonsActions from '../store/persons.actions'
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { getPersons } from '../store/persons.reducer';
-import { tap } from 'rxjs/operators';
+import { selectEntityPerson } from '../store/persons.reducer';
 
 @Component({
   selector: 'app-persons',
@@ -36,9 +36,10 @@ export class PersonsEntityComponent implements OnInit {
 
     this.persons$ = this.store.select(getPersons)
 
-    this.persons$.subscribe(res => console.log(res))
+    this.selectedPerson$ = this.store.select(selectEntityPerson)
 
     this.personsCount$ = this.store.select(getCount)
+
   }
 
   addPerson(){
