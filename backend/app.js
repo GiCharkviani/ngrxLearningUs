@@ -169,7 +169,7 @@ app.patch("/api/countries/:id", async (req, res) => {
       res.status(404).send({ error: "country not found!" });
     }
 
-    res.send(country);
+    res.send({ ...updatedCountry, _id: req.params.id });
   } catch (error) {
     res.status(500).send({ error: "Server Error!" });
   }

@@ -3,21 +3,23 @@ import { Injectable } from '@angular/core';
 
 import { map } from 'rxjs/operators';
 import { Country } from './models/country.model';
-import { Response } from './models/response.model';
+import { GetResponse, PatchResponse } from './models/response.model';
 
 @Injectable({ providedIn: 'root' })
 export class CountriesService {
   constructor(private http: HttpClient) {}
 
   getCountries() {
-    return this.http.get<Response>('http://localhost:3000/api/countries').pipe(
-      map((res) => {
-        return res.countries;
-      })
-    );
+    return this.http
+      .get<GetResponse>('http://localhost:3000/api/countries')
+      .pipe(
+        map((res) => {
+          return res.countries;
+        })
+      );
   }
 
-  addCountry(country: string | null, capital: string | null) {
+  addCountry(country: string | undefined, capital: string | undefined) {
     return this.http.post<any>('http://localhost:3000/api/countries', {
       country,
       capital,
@@ -26,12 +28,17 @@ export class CountriesService {
 
   editCountry(
     _id: string | undefined,
-    country: string | null,
-    capital: string | null
+    country: string | undefined,
+    capital: string | undefined
   ) {
-    return this.http.patch(`http://localhost:3000/api/countries/${_id}`, {
-      country,
-      capital,
-    });
+    console.log(country, capital);
+
+    return this.http.patch<PatchResponse>(
+      `http://localhost:3000/api/countries/${_id}`,
+      {
+        country,
+        capital,
+      }
+    );
   }
 }

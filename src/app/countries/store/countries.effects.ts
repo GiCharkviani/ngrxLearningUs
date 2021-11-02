@@ -55,11 +55,11 @@ export class CountriesEffects {
           .pipe(
             tap((res) => console.log(res)),
             map((res) =>
-              CountriesActions.addCountrySuccess({
+              CountriesActions.editCountrySuccess({
                 country: {
-                  country: 'Geo',
-                  capital: 'Tbi',
-                  _id: 'asdasdasdasdasd',
+                  country: res.country,
+                  capital: res.capital,
+                  _id: res._id,
                 },
               })
             )
@@ -67,37 +67,4 @@ export class CountriesEffects {
       )
     )
   );
-
-  // editCountry$ = createEffect(() =>
-  //   this.actions$.pipe(
-  //     ofType(CountriesActions.editCountry),
-  //     mergeMap((action) =>
-  //       this.countriesService
-  //         .editCountry(
-  //           action.country._id,
-  //           action.country.country,
-  //           action.country.capital
-  //         )
-  //         .pipe(
-  //           tap((res) => console.log),
-  //           map((res) =>
-  //             CountriesActions.addCountrySuccess({ country: res.country })
-  //           )
-  //         )
-  //     )
-  //   )
-  // );
-
-  // editCountry$ = createEffect(() =>
-  //   this.actions$.pipe(
-  //     ofType(CountriesActions.editCountry),
-  //     mergeMap((action) =>
-  //       this.countriesService
-  //         .editCountry(action._id, action.name, action.capital)
-  //         .pipe((res) =>
-  //           CountriesActions.editCountrySuccess({ country: res.country })
-  //         )
-  //     )
-  //   )
-  // );
 }

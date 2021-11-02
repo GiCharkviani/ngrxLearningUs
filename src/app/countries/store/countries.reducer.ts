@@ -52,13 +52,17 @@ export const countriesReducer = createReducer<CountriesState>(
       ...state,
       selectedCountry: action.country,
     };
+  }),
+  on(CountriesActions.editCountrySuccess, (state, action): CountriesState => {
+    const indexOfChangedFile = state.countries.findIndex(
+      (country) => country._id === action.country._id
+    );
+    const unchangedCountries = state.countries.slice();
+    unchangedCountries[indexOfChangedFile] = action.country;
+
+    return {
+      ...state,
+      countries: unchangedCountries,
+    };
   })
-  // on(CountriesActions.deleteCountry, (state, action): CountriesState => {
-  //   return {
-  //     ...state,
-  //     countries: [
-  //       ...state.countries.filter((country) => country.id !== action.id),
-  //     ],
-  //   };
-  // })
 );

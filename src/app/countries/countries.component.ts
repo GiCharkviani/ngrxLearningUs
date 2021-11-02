@@ -27,6 +27,9 @@ export class CountriesComponent implements OnInit {
   editClicked$!: Observable<boolean>;
   selectedCountry$!: Observable<Country | undefined>;
   selectedCountryName$!: Observable<string | undefined | null>;
+  changedCountry!: string;
+  changedCapital!: string;
+  _id!: string;
 
   constructor(private store: Store<CountriesState>) {
     this.countries$ = this.store.select(countriesSelector);
@@ -34,6 +37,7 @@ export class CountriesComponent implements OnInit {
       tap((country) => {
         this.editCountryForm.get('country')?.setValue(country?.country);
         this.editCountryForm.get('capital')?.setValue(country?.capital);
+        this.editCountryForm.get('_id')?.setValue(country?._id);
       })
     );
   }
@@ -49,7 +53,19 @@ export class CountriesComponent implements OnInit {
     this.editCountryForm = new FormGroup({
       country: new FormControl(null, Validators.required),
       capital: new FormControl(null, Validators.required),
+      _id: new FormControl(),
     });
+
+    // Subscribe Edit Country Form On Changes
+    this.editCountryForm.valueChanges
+      .pipe(
+        tap(() => {
+          this.changedCountry = this.editCountryForm.get('country')?.value;
+          this.changedCapital = this.editCountryForm.get('capital')?.value;
+          this._id = this.editCountryForm.get('_id')?.value;
+        })
+      )
+      .subscribe();
 
     // Load Countries
     this.store.dispatch(CountriesActions.loadCountries());
@@ -70,14 +86,25 @@ export class CountriesComponent implements OnInit {
   }
 
   saveChanges() {
-    const country = this.editCountryForm.get('country')?.value;
-    const capital = this.editCountryForm.get('capital')?.value;
-    const _id = this.editCountryForm.get('_id')?.value;
+    // this.selectedCountry$
+    //   .pipe(
+    //     tap((res) => {
+    //       country = res?.country;
+    //       capital = res?.capital;
+    //       _id = res?._id;
+    //     })
+    //   )
+    //   .subscribe();
 
     this.store.dispatch(
-      CountriesActions.editCountry({ country: { country, capital, _id } })
+      CountriesActions.editCountry({
+        country: {
+          country: this.changedCountry,
+          capital: this.changedCapital,
+          _id: this._id,
+        },
+      })
     );
-
     // this.store.dispatch(CountriesActions.editCountry({ _id, name, capital }));
   }
 
