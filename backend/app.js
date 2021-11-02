@@ -147,10 +147,7 @@ app.delete("/api/countries/:id", async (req, res, next) => {
       return res.status(404).send({ error: "Error, country not found!" });
     }
 
-    res.send({
-      message: "Country deleted successfully",
-      deletedCountry: countryDeleted,
-    });
+    res.send(countryDeleted);
   } catch (error) {
     res.status(500).send({ error: "Server error" });
   }

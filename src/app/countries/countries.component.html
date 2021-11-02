@@ -24,6 +24,9 @@
     <div *ngFor="let country of countries$ | async">
       <p>{{ country.country }}</p>
       <button type="button" (click)="editCountry(country)">Edit Country</button>
+      <button type="button" (click)="deleteCountry(country)">
+        Delete Country
+      </button>
     </div>
   </div>
 

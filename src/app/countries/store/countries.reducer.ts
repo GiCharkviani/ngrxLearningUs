@@ -1,3 +1,5 @@
+import { createEntityAdapter } from '@ngrx/entity';
+import { EntityState, EntityAdapter } from '@ngrx/entity/src/models';
 import {
   createFeatureSelector,
   createReducer,
@@ -8,23 +10,28 @@ import { Country } from '../models/country.model';
 
 import * as CountriesActions from './countries.actions';
 
-export interface CountriesState {
-  countries: Country[];
+export interface CountryState extends EntityState<Country> {
   selectedCountry: Country | undefined;
 }
 
-const initialState: CountriesState = {
-  countries: [],
+export const CountryAdapter: EntityAdapter<Country> =
+  createEntityAdapter<Country>({
+    selectId: (country: Country) => country._id,
+  });
+
+export const initialState = CountryAdapter.getInitialState({
   selectedCountry: undefined,
-};
+});
 
 // Selectors
+const CountrySelectors = CountryAdapter.getSelectors();
+
 export const getCountriesFeatureState =
-  createFeatureSelector<CountriesState>('countries');
+  createFeatureSelector<CountryState>('countries');
 
 export const countriesSelector = createSelector(
   getCountriesFeatureState,
-  (state) => state.countries
+  CountrySelectors.selectAll
 );
 
 export const selectedCountrySelector = createSelector(
@@ -33,36 +40,24 @@ export const selectedCountrySelector = createSelector(
 );
 
 // Reducer
-export const countriesReducer = createReducer<CountriesState>(
+export const countriesReducer = createReducer<CountryState>(
   initialState,
-  on(CountriesActions.loadCountriesSuccess, (state, action): CountriesState => {
-    return {
-      ...state,
-      countries: action.countries,
-    };
+  on(CountriesActions.loadCountriesSuccess, (state, action): CountryState => {
+    return CountryAdapter.setAll(action.countries, state);
   }),
-  on(CountriesActions.addCountrySuccess, (state, action): CountriesState => {
-    return {
-      ...state,
-      countries: [...state.countries, action.country],
-    };
+  on(CountriesActions.addCountrySuccess, (state, action): CountryState => {
+    return CountryAdapter.addOne(action.country, state);
   }),
-  on(CountriesActions.selectCountry, (state, action): CountriesState => {
+  on(CountriesActions.selectCountry, (state, action): CountryState => {
     return {
       ...state,
       selectedCountry: action.country,
     };
   }),
-  on(CountriesActions.editCountrySuccess, (state, action): CountriesState => {
-    const indexOfChangedFile = state.countries.findIndex(
-      (country) => country._id === action.country._id
-    );
-    const unchangedCountries = state.countries.slice();
-    unchangedCountries[indexOfChangedFile] = action.country;
-
-    return {
-      ...state,
-      countries: unchangedCountries,
-    };
+  on(CountriesActions.editCountrySuccess, (state, action): CountryState => {
+    return CountryAdapter.updateOne(action.updatedCountry, state);
+  }),
+  on(CountriesActions.deleteCountrySuccess, (state, action): CountryState => {
+    return CountryAdapter.removeOne(action.id, state);
   })
 );

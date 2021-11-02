@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { Country } from './models/country.model';
 import {
   countriesSelector,
-  CountriesState,
+  CountryState,
   selectedCountrySelector,
 } from './store/countries.reducer';
 
@@ -27,11 +27,13 @@ export class CountriesComponent implements OnInit {
   editClicked$!: Observable<boolean>;
   selectedCountry$!: Observable<Country | undefined>;
   selectedCountryName$!: Observable<string | undefined | null>;
+
+  // Edited Information
   changedCountry!: string;
   changedCapital!: string;
   _id!: string;
 
-  constructor(private store: Store<CountriesState>) {
+  constructor(private store: Store<CountryState>) {
     this.countries$ = this.store.select(countriesSelector);
     this.selectedCountry$ = this.store.select(selectedCountrySelector).pipe(
       tap((country) => {
@@ -75,27 +77,21 @@ export class CountriesComponent implements OnInit {
     const country = {
       country: this.countriesForm.value.country,
       capital: this.countriesForm.value.capital,
+      _id: '',
     };
 
     this.store.dispatch(CountriesActions.addCountry(country));
   }
 
   editCountry(country: Country) {
-    this.store.dispatch(CountriesActions.toggleEditForm({ editClicked: true }));
     this.store.dispatch(CountriesActions.selectCountry({ country }));
   }
 
-  saveChanges() {
-    // this.selectedCountry$
-    //   .pipe(
-    //     tap((res) => {
-    //       country = res?.country;
-    //       capital = res?.capital;
-    //       _id = res?._id;
-    //     })
-    //   )
-    //   .subscribe();
+  deleteCountry(country: Country) {
+    this.store.dispatch(CountriesActions.deleteCountry({ id: country._id }));
+  }
 
+  saveChanges() {
     this.store.dispatch(
       CountriesActions.editCountry({
         country: {
@@ -105,14 +101,9 @@ export class CountriesComponent implements OnInit {
         },
       })
     );
-    // this.store.dispatch(CountriesActions.editCountry({ _id, name, capital }));
   }
 
   discardChanges() {
     this.store.dispatch(CountriesActions.selectCountry({ country: undefined }));
-  }
-
-  deleteCountry(id: number) {
-    this.store.dispatch(CountriesActions.deleteCountry({ id }));
   }
 }

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { map } from 'rxjs/operators';
 import { Country } from './models/country.model';
@@ -31,8 +32,6 @@ export class CountriesService {
     country: string | undefined,
     capital: string | undefined
   ) {
-    console.log(country, capital);
-
     return this.http.patch<PatchResponse>(
       `http://localhost:3000/api/countries/${_id}`,
       {
@@ -40,5 +39,11 @@ export class CountriesService {
         capital,
       }
     );
+  }
+
+  deleteCountry(_id: string): Observable<string> {
+    return this.http
+      .delete<Country>(`http://localhost:3000/api/countries/${_id}`)
+      .pipe(map((delCountry) => delCountry._id));
   }
 }

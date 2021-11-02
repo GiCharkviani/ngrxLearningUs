@@ -1,3 +1,4 @@
+import { Update } from '@ngrx/entity';
 import { createAction, props } from '@ngrx/store';
 import { Country } from '../models/country.model';
 
@@ -40,11 +41,16 @@ export const editCountry = createAction(
 
 export const editCountrySuccess = createAction(
   '[Countries Page] Edit Country Success',
-  props<{ country: Country }>()
+  props<{ updatedCountry: Update<Country> }>()
 );
 
 // Delete Country
 export const deleteCountry = createAction(
   '[Countries Page] Delete Country',
-  props<{ id: number }>()
+  props<{ id: string }>()
+);
+
+export const deleteCountrySuccess = createAction(
+  '[Countries Page] Delete Country Success',
+  props<{ id: string }>()
 );

@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { map, mergeMap, tap } from 'rxjs/operators';
+import { Update } from '@ngrx/entity';
+import { exhaustMap, map, mergeMap } from 'rxjs/operators';
 
 import { CountriesService } from '../countries.service';
+import { Country } from '../models/country.model';
 import * as CountriesActions from './countries.actions';
 
 @Injectable()
@@ -45,7 +47,7 @@ export class CountriesEffects {
   editCountry$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CountriesActions.editCountry),
-      mergeMap((action) =>
+      exhaustMap((action) =>
         this.countriesService
           .editCountry(
             action.country._id,
@@ -53,18 +55,31 @@ export class CountriesEffects {
             action.country.capital
           )
           .pipe(
-            tap((res) => console.log(res)),
-            map((res) =>
-              CountriesActions.editCountrySuccess({
-                country: {
-                  country: res.country,
-                  capital: res.capital,
-                  _id: res._id,
+            map((res) => {
+              const updatedCountry: Update<Country> = {
+                id: res._id,
+                changes: {
+                  ...res,
                 },
-              })
-            )
+              };
+
+              return CountriesActions.editCountrySuccess({ updatedCountry });
+            })
           )
       )
     )
   );
+
+  deleteCountry$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(CountriesActions.deleteCountry),
+      mergeMap((action) => {
+        return this.countriesService.deleteCountry(action.id).pipe(
+          map((res) => {
+            return CountriesActions.deleteCountrySuccess({ id: res });
+          })
+        );
+      })
+    );
+  });
 }
