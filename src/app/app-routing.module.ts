@@ -13,6 +13,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./countries/countries.module').then((m) => m.CountriesModule),
   },
+  {
+    path: 'person',
+    loadChildren: () =>
+      import('./person/person.module').then((m) => m.PersonModule),
+  },
   { path: '**', redirectTo: '/home' },
 ];
 
