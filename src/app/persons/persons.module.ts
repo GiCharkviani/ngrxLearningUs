@@ -12,6 +12,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { EntityDataService, EntityDefinitionService, EntityMetadataMap } from '@ngrx/data';
 import { PersonModel } from './person.model';
 import { PersonDefaultService } from './store/person-default.service';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 const entityMetadata: EntityMetadataMap = {
   Person: {
@@ -34,6 +35,7 @@ const entityMetadata: EntityMetadataMap = {
     MatDialogModule,
     MatInputModule,
     DragDropModule,
+    MatProgressSpinnerModule
   ],
   providers:[PersonDefaultService],
   exports: [RouterModule],

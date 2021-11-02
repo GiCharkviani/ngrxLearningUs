@@ -17,9 +17,12 @@ export class PersonsComponent implements OnInit {
   selectedPerson$!: Observable<PersonModel | undefined>;
   editMode:boolean = false;
   errorMessage$!: Observable<string>;
+  loading$!:Observable<boolean>;
 
   constructor(private personService: PersonService) {
     this.persons$ = personService.entities$;
+    this.errorMessage$ = personService.errors$.pipe(map(error => error.payload.data.error.error.message));
+    this.loading$ = personService.loading$
    }
 
   ngOnInit(): void {

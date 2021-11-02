@@ -101,6 +101,10 @@
 
 <hr />
 
+<div *ngIf="loading$ | async" style="display: flex; justify-content: center; font-size: 1em;">
+  <mat-spinner></mat-spinner>
+</div>
+
 <div *ngIf="errorMessage$ | async" class="alert alert-danger" role="alert">
   {{ errorMessage$ | async }}
 </div>

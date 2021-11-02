@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { CountryModel } from '../country.model';
 import { CountryService } from '../store/country.service';
 import { Router } from '@angular/router';
-import { map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-countries',
@@ -13,6 +13,7 @@ import { map } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CountriesComponent implements OnInit {
+
   countries$!: Observable<CountryModel[]>;
   selectedCountry$!:Observable<CountryModel | undefined>;
 
@@ -20,11 +21,15 @@ export class CountriesComponent implements OnInit {
 
   countryForms!: FormGroup;
 
-  errorMessage$!: Observable<string>;
+  errorMessage$!: Observable<any>;
   selected:boolean = false;
 
+  loading$!:Observable<boolean>;
+
   constructor(private countryService: CountryService, private router: Router) {
-    this.countries$ = countryService.entities$
+    this.countries$ = countryService.entities$;
+    this.errorMessage$ = countryService.errors$.pipe(map(error => error.payload.data.error.error.message));
+    this.loading$ = countryService.loading$
   }
 
   ngOnInit(): void {
@@ -33,7 +38,6 @@ export class CountriesComponent implements OnInit {
       name: new FormControl('', Validators.required),
       capital: new FormControl('', Validators.required),
     });
-
 
     //store
     this.countryService.getAll()

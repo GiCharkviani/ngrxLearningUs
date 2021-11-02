@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { EntityDataService, EntityDefinitionService, EntityMetadataMap } from '@ngrx/data';
 import { CountryModel } from './country.model';
 import { CountryDataService } from './store/country-default.service';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 const routes: Routes = [{ path: '', component: CountriesComponent }];
 
@@ -26,7 +27,8 @@ const entityMetadata: EntityMetadataMap = {
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    HttpClientModule
+    HttpClientModule,
+    MatProgressSpinnerModule
   ],
   providers: [CountryDataService],
   exports: [RouterModule],

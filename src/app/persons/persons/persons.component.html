@@ -69,6 +69,10 @@
     </ng-template>
   </div>
 
+  <div *ngIf="loading$ | async" style="display: flex; justify-content: center; font-size: 1em;">
+    <mat-spinner></mat-spinner>
+  </div>
+
   <ng-template #selectPerson>
     <div class="col-6" style="display: flex; justify-content: center; align-items: center;">
       <h3 class="display-1 text-info">Click <span class="text-dark">Edit</span> to edit person</h3>
