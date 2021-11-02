@@ -133,7 +133,7 @@ app.post("/api/countries", async (req, res, next) => {
       return res.status(400).send({ error: "Not saved!" });
     }
 
-    res.send({ message: "User added syccessfully", country: countrySaved });
+    res.send({ message: "Country added syccessfully", country: countrySaved });
   } catch (e) {
     res.status(500).send({ error: "Server error!" });
   }
@@ -148,7 +148,7 @@ app.delete("/api/countries/:id", async (req, res, next) => {
     }
 
     res.send({
-      message: "User deleted successfully",
+      message: "Country deleted successfully",
       deletedCountry: countryDeleted,
     });
   } catch (error) {

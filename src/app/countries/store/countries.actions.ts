@@ -20,6 +20,18 @@ export const addCountrySuccess = createAction(
   props<{ country: Country }>()
 );
 
+// Select
+export const selectCountry = createAction(
+  '[Countries Page] Select Country',
+  props<{ country: Country | undefined }>()
+);
+
+// Toggle edit form
+export const toggleEditForm = createAction(
+  '[Countries Page] Toggle Edit Form',
+  props<{ editClicked: boolean }>()
+);
+
 // Edit Country
 export const editCountry = createAction(
   '[Countries Page] Edit Country',

@@ -24,8 +24,12 @@ export class CountriesService {
     });
   }
 
-  editCountry(_id: string, country: string, capital: string) {
-    return this.http.patch(`http://localhost:3000/api/persons/${_id}`, {
+  editCountry(
+    _id: string | undefined,
+    country: string | null,
+    capital: string | null
+  ) {
+    return this.http.patch(`http://localhost:3000/api/countries/${_id}`, {
       country,
       capital,
     });

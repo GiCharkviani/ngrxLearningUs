@@ -10,10 +10,12 @@ import * as CountriesActions from './countries.actions';
 
 export interface CountriesState {
   countries: Country[];
+  selectedCountry: Country | undefined;
 }
 
 const initialState: CountriesState = {
   countries: [],
+  selectedCountry: undefined,
 };
 
 // Selectors
@@ -23,6 +25,11 @@ export const getCountriesFeatureState =
 export const countriesSelector = createSelector(
   getCountriesFeatureState,
   (state) => state.countries
+);
+
+export const selectedCountrySelector = createSelector(
+  getCountriesFeatureState,
+  (state) => state.selectedCountry
 );
 
 // Reducer
@@ -38,6 +45,12 @@ export const countriesReducer = createReducer<CountriesState>(
     return {
       ...state,
       countries: [...state.countries, action.country],
+    };
+  }),
+  on(CountriesActions.selectCountry, (state, action): CountriesState => {
+    return {
+      ...state,
+      selectedCountry: action.country,
     };
   })
   // on(CountriesActions.deleteCountry, (state, action): CountriesState => {

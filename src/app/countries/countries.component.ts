@@ -3,9 +3,14 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Country } from './models/country.model';
-import { countriesSelector } from './store/countries.reducer';
+import {
+  countriesSelector,
+  CountriesState,
+  selectedCountrySelector,
+} from './store/countries.reducer';
 
 import * as CountriesActions from './store/countries.actions';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-countries',
@@ -13,19 +18,27 @@ import * as CountriesActions from './store/countries.actions';
   styleUrls: ['./countries.component.css'],
 })
 export class CountriesComponent implements OnInit {
-  countries$!: Observable<Country[]>;
+  // Reactive Forms
   countriesForm!: FormGroup;
   editCountryForm!: FormGroup;
-  editClicked = false;
 
-  constructor(private store: Store<any>) {
+  // Countries Observable
+  countries$!: Observable<Country[]>;
+  editClicked$!: Observable<boolean>;
+  selectedCountry$!: Observable<Country | undefined>;
+  selectedCountryName$!: Observable<string | undefined | null>;
+
+  constructor(private store: Store<CountriesState>) {
     this.countries$ = this.store.select(countriesSelector);
+    this.selectedCountry$ = this.store.select(selectedCountrySelector).pipe(
+      tap((country) => {
+        this.editCountryForm.get('country')?.setValue(country?.country);
+        this.editCountryForm.get('capital')?.setValue(country?.capital);
+      })
+    );
   }
 
   ngOnInit() {
-    // Load Countries
-    this.store.dispatch(CountriesActions.loadCountries());
-
     // Add Country Form
     this.countriesForm = new FormGroup({
       country: new FormControl(null, Validators.required),
@@ -34,10 +47,12 @@ export class CountriesComponent implements OnInit {
 
     // Edit Country Form
     this.editCountryForm = new FormGroup({
-      country: new FormControl(Validators.required),
-      capital: new FormControl(Validators.required),
-      _id: new FormControl(Validators.required),
+      country: new FormControl(null, Validators.required),
+      capital: new FormControl(null, Validators.required),
     });
+
+    // Load Countries
+    this.store.dispatch(CountriesActions.loadCountries());
   }
 
   addCountry() {
@@ -50,18 +65,24 @@ export class CountriesComponent implements OnInit {
   }
 
   editCountry(country: Country) {
-    this.editClicked = !this.editClicked;
-
-    this.editCountryForm.get('country')?.setValue(country.country);
-    this.editCountryForm.get('capital')?.setValue(country.capital);
+    this.store.dispatch(CountriesActions.toggleEditForm({ editClicked: true }));
+    this.store.dispatch(CountriesActions.selectCountry({ country }));
   }
 
-  onSave() {
-    const name = this.editCountryForm.get('country')?.value;
+  saveChanges() {
+    const country = this.editCountryForm.get('country')?.value;
     const capital = this.editCountryForm.get('capital')?.value;
     const _id = this.editCountryForm.get('_id')?.value;
 
+    this.store.dispatch(
+      CountriesActions.editCountry({ country: { country, capital, _id } })
+    );
+
     // this.store.dispatch(CountriesActions.editCountry({ _id, name, capital }));
+  }
+
+  discardChanges() {
+    this.store.dispatch(CountriesActions.selectCountry({ country: undefined }));
   }
 
   deleteCountry(id: number) {
