@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EntityDataModule, EntityDataService } from '@ngrx/data';
 import { entityConfig } from './entity-metadata';
 import { CountryDataService } from './countries/store/country-default.service';
+import { routerReducer, StoreRouterConnectingModule } from '@ngrx/router-store';
 
 @NgModule({
   declarations: [AppComponent],
@@ -18,7 +19,9 @@ import { CountryDataService } from './countries/store/country-default.service';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    StoreModule.forRoot({}),
+    StoreModule.forRoot({
+      router: routerReducer
+    }),
     StoreDevtoolsModule.instrument({
       name: 'NgRx learning app',
       maxAge: 25,
@@ -27,6 +30,7 @@ import { CountryDataService } from './countries/store/country-default.service';
     EffectsModule.forRoot([]),
     BrowserAnimationsModule,
     EntityDataModule.forRoot(entityConfig),
+    StoreRouterConnectingModule.forRoot(),
   ],
   providers: [CountryDataService],
   bootstrap: [AppComponent],
