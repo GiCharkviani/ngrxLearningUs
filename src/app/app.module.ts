@@ -8,17 +8,24 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { EntityDataModule, EntityDataService } from '@ngrx/data';
+import { EntityDataModule } from '@ngrx/data';
 import { entityConfig } from './entity-metadata';
 import { CountryDataService } from './countries/store/country-default.service';
 import { routerReducer, StoreRouterConnectingModule } from '@ngrx/router-store';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    MatToolbarModule,
+    MatIconModule,
     HttpClientModule,
+    MatButtonModule,
     StoreModule.forRoot({
       router: routerReducer
     }),
