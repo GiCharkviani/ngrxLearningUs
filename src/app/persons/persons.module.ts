@@ -2,27 +2,30 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PersonsComponent } from './persons/persons.component';
 import { RouterModule } from '@angular/router';
-import { StoreModule } from '@ngrx/store';
-import { PersonsReducer } from './store/persons.reducer';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { EffectsModule } from '@ngrx/effects';
-import { PersonsEffects } from './store/persons.effects';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {MatButtonModule} from '@angular/material/button';
-import {MatDialogModule} from '@angular/material/dialog';
-import {MatInputModule} from '@angular/material/input';
-import {DragDropModule} from '@angular/cdk/drag-drop';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { EntityDataService, EntityDefinitionService, EntityMetadataMap } from '@ngrx/data';
+import { PersonModel } from './person.model';
+import { PersonDefaultService } from './store/person-default.service';
+
+const entityMetadata: EntityMetadataMap = {
+  Person: {
+    selectId: (person: PersonModel) => person._id,
+    entityDispatcherOptions: {optimisticUpdate: true}
+  },
+
+};
 
 @NgModule({
-  declarations: [
-    PersonsComponent
-  ],
+  declarations: [PersonsComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild([{path: '', component: PersonsComponent}]),
-    StoreModule.forFeature('persons', PersonsReducer),
-    EffectsModule.forFeature([PersonsEffects]),
+    RouterModule.forChild([{ path: '', component: PersonsComponent }]),
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
@@ -30,8 +33,14 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     MatButtonModule,
     MatDialogModule,
     MatInputModule,
-    DragDropModule
+    DragDropModule,
   ],
-  exports: [RouterModule]
+  providers:[PersonDefaultService],
+  exports: [RouterModule],
 })
-export class PersonsModule { }
+export class PersonsModule {
+  constructor(eds: EntityDefinitionService, entityDataService: EntityDataService, personDefaultService: PersonDefaultService) {
+    eds.registerMetadataMap(entityMetadata)
+    entityDataService.registerService('Person', personDefaultService)
+  }
+}

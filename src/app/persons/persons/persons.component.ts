@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { PersonModel } from '../person.model';
-import { errorMessage, getPersons, selectPerson, State } from '../store/persons.reducer';
-import * as PersonsActions from '../store/persons.actions'
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { PersonService } from '../store/person.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-persons',
@@ -19,7 +18,9 @@ export class PersonsComponent implements OnInit {
   editMode:boolean = false;
   errorMessage$!: Observable<string>;
 
-  constructor(private store: Store<State>) { }
+  constructor(private personService: PersonService) {
+    this.persons$ = personService.entities$;
+   }
 
   ngOnInit(): void {
     this.addPersonForm = new FormGroup({
@@ -28,13 +29,9 @@ export class PersonsComponent implements OnInit {
       age: new FormControl(null, Validators.required)
     })
 
-    this.errorMessage$ = this.store.select(errorMessage)
+    this.personService.getAll()
 
-    this.selectedPerson$ = this.store.select(selectPerson)
 
-    this.store.dispatch(PersonsActions.startLoadingPersons());
-
-    this.persons$ = this.store.select(getPersons);
   }
 
   addPerson(){
@@ -44,14 +41,14 @@ export class PersonsComponent implements OnInit {
       surname: this.addPersonForm.value.surname,
       age: this.addPersonForm.value.age
     }
-    this.store.dispatch(PersonsActions.startAddingPerson({person}))
+    this.personService.add(person)
     this.addPersonForm.reset()
   }
 
 
-  editing(person: PersonModel){
+  editing(personModel: PersonModel){
     this.editMode = false;
-    this.store.dispatch(PersonsActions.selectPerson({person}))
+    this.selectedPerson$ = this.personService.collection$.pipe(map(person => person.entities[personModel._id]))
   }
 
 
@@ -62,12 +59,12 @@ export class PersonsComponent implements OnInit {
       surname,
       age
     }
+    this.personService.update(updatedPerson)
     form.reset()
     this.editMode = true;
-    this.store.dispatch(PersonsActions.startUpdatingPerson({person: updatedPerson}))
   }
 
   deletePerson(id:string){
-    this.store.dispatch(PersonsActions.startDeletingPerson({id}))
+    this.personService.delete(id)
   }
 }

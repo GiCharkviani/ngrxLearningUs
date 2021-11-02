@@ -5,7 +5,6 @@ import { RouterModule, Routes } from "@angular/router";
 const routes: Routes = [
   {path: 'persons', loadChildren: () => import('./persons/persons.module').then(m => m.PersonsModule)},
   {path: 'countries', loadChildren: () => import('./countries/countries.module').then(m => m.CountriesModule)},
-  {path: 'entity', loadChildren: () => import('./persons-with-entity/persons.module').then(m => m.PersonsEntityModule)},
   {path: '**', redirectTo: '/'}
 ]
 

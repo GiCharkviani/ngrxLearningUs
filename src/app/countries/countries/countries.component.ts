@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { CountryModel } from '../country.model';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
-import { getCountries, getError, SelectCountry, State } from '../store/country.reducer';
-import * as CountryActions from '../store/country.actions';
+import { CountryModel } from '../country.model';
+import { CountryService } from '../store/country.service';
+import { Router } from '@angular/router';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-countries',
@@ -23,7 +23,9 @@ export class CountriesComponent implements OnInit {
   errorMessage$!: Observable<string>;
   selected:boolean = false;
 
-  constructor(private store: Store<State>) {}
+  constructor(private countryService: CountryService, private router: Router) {
+    this.countries$ = countryService.entities$
+  }
 
   ngOnInit(): void {
     //form
@@ -31,15 +33,11 @@ export class CountriesComponent implements OnInit {
       name: new FormControl('', Validators.required),
       capital: new FormControl('', Validators.required),
     });
-    //store:
-    this.store.dispatch(CountryActions.StartedLoadingCountries());
-    //selecting well
-    this.countries$ = this.store.select(getCountries);
-    //select country
-    this.selectedCountry$ = this.store.select(SelectCountry)
 
-    //error handler
-    this.errorMessage$ = this.store.select(getError);
+
+    //store
+    this.countryService.getAll()
+
   }
 
   addForm() {
@@ -48,25 +46,30 @@ export class CountriesComponent implements OnInit {
       name: this.countryForms.value.name,
       capital: this.countryForms.value.capital,
     };
-    this.store.dispatch(CountryActions.StartedAddingCountry({ country }));
+    this.countryService.add(country)
     this.countryForms.reset();
   }
+
   delete(event:any,id:string){
-    this.store.dispatch(CountryActions.StartedDeletingCountry({countryId: id}))
+    this.countryService.delete(id)
   }
+
   switchEdit(){
     this.editing = !this.editing
   }
-  selectCountry(id:string){
-    this.store.dispatch(CountryActions.SelectCountry({id}))
+
+  selectCountry(countryGOt:CountryModel){
+    this.selectedCountry$ = this.countryService.collection$.pipe(map(country => country.entities[countryGOt._id]))
   }
+
   editCountry(editForm: NgForm, id:string){
     const country:CountryModel = {
       _id: id,
       name: editForm.value.countryName,
       capital: editForm.value.capital
     }
-    this.store.dispatch(CountryActions.StartedEditingCountry({country}))
+
+    this.countryService.update(country)
     editForm.reset()
   }
 }

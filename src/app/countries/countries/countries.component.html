@@ -38,7 +38,7 @@
     <ul class="list-group">
       <li
         style="cursor: pointer"
-        (click)="selectCountry(country._id)"
+        (click)="selectCountry(country)"
         class="list-group-item"
         aria-current="true"
         *ngFor="let country of countries$ | async"
@@ -54,6 +54,7 @@
       </li>
     </ul>
   </div>
+
   <div class="col-6" *ngIf="selectedCountry$ | async as selected">
     <ng-container *ngIf="editing; else showing">
       <h2 class="lead" style="text-align: center;">{{selected.name}}</h2>

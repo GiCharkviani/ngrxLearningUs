@@ -144,7 +144,10 @@ app.patch("/api/countries/:id", async (req, res) => {
       capital: req.body.capital
     };
 
+
     const country = await Country.findByIdAndUpdate(req.params.id, updateCountry);
+
+
 
     if(!country) {
       res.status(404).send({error: "country not found!"})

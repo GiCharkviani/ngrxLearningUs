@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, shareReplay, tap } from 'rxjs/operators';
-import { CountryModel } from './country.model';
+import { map, shareReplay } from 'rxjs/operators';
+import { CountryModel } from '../countries/country.model';
 
 
 

@@ -2,38 +2,42 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CountriesComponent } from './countries/countries.component';
 import { RouterModule, Routes } from '@angular/router';
-import { StoreModule } from '@ngrx/store';
-import { CountriesReducer } from './store/country.reducer';
 import { FormsModule } from '@angular/forms';
-
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { EffectsModule } from '@ngrx/effects';
-import { CountryEffects } from './store/country.effects';
-import { CityComponent } from './countries/city/city.component';
+import { EntityDataService, EntityDefinitionService, EntityMetadataMap } from '@ngrx/data';
+import { CountryModel } from './country.model';
+import { CountryDataService } from './store/country-default.service';
 
+const routes: Routes = [{ path: '', component: CountriesComponent }];
 
-const routes: Routes = [
-  {path: '', component: CountriesComponent, children: [
-    {path: ':city', component: CityComponent}
-  ]}
-]
-
+const entityMetadata: EntityMetadataMap = {
+  Country: {
+    selectId: (country: CountryModel) => country._id,
+    entityDispatcherOptions: {optimisticUpdate: true}
+  },
+};
 
 @NgModule({
-  declarations: [
-    CountriesComponent,
-    CityComponent
-  ],
+  declarations: [CountriesComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    StoreModule.forFeature('countries', CountriesReducer),
-    EffectsModule.forFeature([CountryEffects]),
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
     HttpClientModule
   ],
-  exports: [RouterModule]
+  providers: [CountryDataService],
+  exports: [RouterModule],
 })
-export class CountriesModule { }
+export class CountriesModule {
+  constructor(
+    eds: EntityDefinitionService,
+    entityDataService: EntityDataService,
+    countryDataService: CountryDataService
+  ) {
+    eds.registerMetadataMap(entityMetadata);
+    entityDataService.registerService('Country', countryDataService);
+  }
+}
