@@ -11,7 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EntityDataModule } from '@ngrx/data';
 import { entityConfig } from './entity-metadata';
 import { CountryDataService } from './countries/store/country-default.service';
-import { routerReducer, StoreRouterConnectingModule } from '@ngrx/router-store';
+import { NavigationActionTiming, routerReducer, StoreRouterConnectingModule } from '@ngrx/router-store';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -37,7 +37,9 @@ import {MatButtonModule} from '@angular/material/button';
     EffectsModule.forRoot([]),
     BrowserAnimationsModule,
     EntityDataModule.forRoot(entityConfig),
-    StoreRouterConnectingModule.forRoot(),
+    StoreRouterConnectingModule.forRoot({
+      navigationActionTiming: NavigationActionTiming.PostActivation
+    }),
   ],
   providers: [CountryDataService],
   bootstrap: [AppComponent],

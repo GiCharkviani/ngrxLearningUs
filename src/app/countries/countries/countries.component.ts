@@ -39,9 +39,6 @@ export class CountriesComponent implements OnInit {
       capital: new FormControl('', Validators.required),
     });
 
-    //store
-    this.countryService.getAll()
-
   }
 
   addForm() {

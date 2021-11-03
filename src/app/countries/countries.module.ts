@@ -9,8 +9,9 @@ import { EntityDataService, EntityDefinitionService, EntityMetadataMap } from '@
 import { CountryModel } from './country.model';
 import { CountryDataService } from './store/country-default.service';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { CountriesResolver } from './countries.resolver';
 
-const routes: Routes = [{ path: '', component: CountriesComponent }];
+const routes: Routes = [{ path: '', component: CountriesComponent, resolve: { countries: CountriesResolver} }];
 
 const entityMetadata: EntityMetadataMap = {
   Country: {
@@ -30,7 +31,7 @@ const entityMetadata: EntityMetadataMap = {
     HttpClientModule,
     MatProgressSpinnerModule
   ],
-  providers: [CountryDataService],
+  providers: [CountryDataService, CountriesResolver],
   exports: [RouterModule],
 })
 export class CountriesModule {

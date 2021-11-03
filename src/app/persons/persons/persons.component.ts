@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { PersonModel } from '../person.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PersonService } from '../store/person.service';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-persons',
@@ -18,6 +18,7 @@ export class PersonsComponent implements OnInit {
   editMode:boolean = false;
   errorMessage$!: Observable<string>;
   loading$!:Observable<boolean>;
+  loaded$!:Observable<boolean>;
 
   constructor(private personService: PersonService) {
     this.persons$ = personService.entities$;
@@ -31,10 +32,6 @@ export class PersonsComponent implements OnInit {
       surname: new FormControl('', Validators.required),
       age: new FormControl(null, Validators.required)
     })
-
-    this.personService.getAll()
-
-
   }
 
   addPerson(){

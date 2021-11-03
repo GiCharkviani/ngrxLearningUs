@@ -13,6 +13,7 @@ import { EntityDataService, EntityDefinitionService, EntityMetadataMap } from '@
 import { PersonModel } from './person.model';
 import { PersonDefaultService } from './store/person-default.service';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { PersonsResolver } from './persons.resolver';
 
 const entityMetadata: EntityMetadataMap = {
   Person: {
@@ -26,7 +27,7 @@ const entityMetadata: EntityMetadataMap = {
   declarations: [PersonsComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild([{ path: '', component: PersonsComponent }]),
+    RouterModule.forChild([{ path: '', component: PersonsComponent, resolve: { persons: PersonsResolver} }]),
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
@@ -37,7 +38,7 @@ const entityMetadata: EntityMetadataMap = {
     DragDropModule,
     MatProgressSpinnerModule
   ],
-  providers:[PersonDefaultService],
+  providers:[PersonDefaultService, PersonsResolver],
   exports: [RouterModule],
 })
 export class PersonsModule {
