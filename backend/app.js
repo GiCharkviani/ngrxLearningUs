@@ -96,7 +96,7 @@ app.patch("/api/persons/:id", async (req, res) => {
       res.status(404).send({ error: "Person not found!" });
     }
 
-    res.send(person);
+    res.send(req.body);
   } catch (error) {
     res.status(500).send({ error: "Server Error!" });
   }

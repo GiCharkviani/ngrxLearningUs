@@ -1,20 +1,101 @@
-<form class="add-person-form">
-  <div>
-    <mat-form-field appearance="fill">
-      <mat-label>Firstname</mat-label>
-      <input matInput autocomplete="false" />
-    </mat-form-field>
+<div class="flex-container person-page-main-container">
+  <form class="add-person-form" [formGroup]="addPersonForm">
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>Firstname</mat-label>
+        <input
+          matInput
+          autocomplete="false"
+          formControlName="firstname"
+          type="text"
+        />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>Surname</mat-label>
+        <input
+          matInput
+          autocomplete="false"
+          formControlName="surname"
+          type="text"
+        />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>Age</mat-label>
+        <input matInput type="number" formControlName="age" type="number" />
+      </mat-form-field>
+    </div>
+
+    <button mat-flat-button color="primary" type="button" (click)="onAdd()">
+      Add Person
+    </button>
+  </form>
+
+  <div class="persons-main-container">
+    <div class="flex-container">
+      <div class="persons">
+        <div class="person" *ngFor="let person of persons$ | async">
+          <div class="person-info-container">
+            <p>{{ person.name }} {{ person.surname }} {{ person.age }}</p>
+          </div>
+          <div class="edit-delete-btns-container">
+            <button
+              mat-flat-button
+              class="edit-btn"
+              (click)="onEdit(person._id)"
+            >
+              Edit
+            </button>
+            <button
+              mat-flat-button
+              color="warn"
+              class="delete-btn"
+              (click)="onDelete(person._id)"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <form class="edit-person-form" [formGroup]="editPersonForm">
+        <div *ngIf="editClicked">
+          <div>
+            <mat-form-field appearance="fill">
+              <mat-label>Firstname</mat-label>
+              <input
+                matInput
+                autocomplete="false"
+                formControlName="firstname"
+              />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="fill">
+              <mat-label>Surname</mat-label>
+              <input matInput autocomplete="false" formControlName="surname" />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="fill">
+              <mat-label>Age</mat-label>
+              <input matInput type="number" formControlName="age" />
+            </mat-form-field>
+          </div>
+
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            (click)="onSave()"
+          >
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
-  <div>
-    <mat-form-field appearance="fill">
-      <mat-label>Lastname</mat-label>
-      <input matInput autocomplete="false" />
-    </mat-form-field>
-  </div>
-  <div>
-    <mat-form-field appearance="fill">
-      <mat-label>Age</mat-label>
-      <input matInput type="number" />
-    </mat-form-field>
-  </div>
-</form>
+</div>

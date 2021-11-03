@@ -1,4 +1,47 @@
+.person-page-main-container {
+  flex-direction: column;
+}
+
+/* Add Form */
 .add-person-form {
+  flex: 1;
+  padding: 20px;
+}
+
+/* Persons Main Container */
+.edit-person-form {
+  flex: 1;
+  padding: 20px;
+}
+
+.persons {
+  flex: 2;
+  padding: 20px;
+}
+
+.person {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 70%;
+  padding: 5px;
+
+  margin-bottom: 20px;
+  background-color: rgb(187, 187, 221);
+
   border-radius: 5px;
-  padding: 50px;
+}
+
+.edit-btn {
+  margin-right: 5px;
+}
+
+p {
+  margin-top: 10px;
+}
+/*  */
+
+.flex-container {
+  display: flex;
 }

@@ -19,7 +19,7 @@ export const CountryAdapter: EntityAdapter<Country> =
     selectId: (country: Country) => country._id,
   });
 
-export const initialState = CountryAdapter.getInitialState({
+const initialState = CountryAdapter.getInitialState({
   selectedCountry: undefined,
 });
 
