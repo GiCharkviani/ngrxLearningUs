@@ -6,11 +6,20 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { StoreModule } from '@ngrx/store';
-import { personReducer } from './store/person.reducers';
-import { EffectsModule } from '@ngrx/effects';
-import { PersonEffects } from './store/person.effects';
 import { ReactiveFormsModule } from '@angular/forms';
+import {
+  EntityDataService,
+  EntityDefinitionService,
+  EntityMetadataMap,
+} from '@ngrx/data';
+import { PersonInterface } from './models/person.model';
+import { DefaultPersonsService } from './store/default-persons.service';
+
+const entityMetadata: EntityMetadataMap = {
+  Person: {
+    selectId: (person: PersonInterface) => person._id,
+  },
+};
 
 @NgModule({
   declarations: [PersonComponent],
@@ -22,8 +31,16 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    StoreModule.forFeature('persons', personReducer),
-    EffectsModule.forFeature([PersonEffects]),
   ],
+  providers: [DefaultPersonsService],
 })
-export class PersonModule {}
+export class PersonModule {
+  constructor(
+    eds: EntityDefinitionService,
+    defaultPersonsService: DefaultPersonsService,
+    entityDataService: EntityDataService
+  ) {
+    eds.registerMetadataMap(entityMetadata);
+    entityDataService.registerService('Person', defaultPersonsService);
+  }
+}

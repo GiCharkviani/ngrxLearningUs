@@ -37,10 +37,7 @@ app.get("/api/persons", async (req, res, next) => {
   try {
     const persons = await Person.find();
     if (persons) {
-      return res.send({
-        message: "successfull",
-        persons: persons,
-      });
+      return res.send(persons);
     }
 
     res.status(404).send({ error: "Not found!" });
@@ -63,7 +60,7 @@ app.post("/api/persons", async (req, res, next) => {
       return res.status(400).send({ error: "Not saved!" });
     }
 
-    res.send({ message: "User added syccessfully", person: personSaved });
+    res.send(personSaved);
   } catch (e) {
     res.status(500).send({ error: "Server error!" });
   }

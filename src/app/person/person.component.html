@@ -29,15 +29,15 @@
       </mat-form-field>
     </div>
 
-    <button mat-flat-button color="primary" type="button" (click)="onAdd()">
+    <button mat-flat-button color="primary" #addBtn type="button">
       Add Person
     </button>
   </form>
 
   <div class="persons-main-container">
     <div class="flex-container">
-      <div class="persons">
-        <div class="person" *ngFor="let person of persons$ | async">
+      <div class="persons" *ngIf="persons$ | async as persons">
+        <div class="person" *ngFor="let person of persons">
           <div class="person-info-container">
             <p>{{ person.name }} {{ person.surname }} {{ person.age }}</p>
           </div>
@@ -61,28 +61,24 @@
         </div>
       </div>
 
-      <form class="edit-person-form" [formGroup]="editPersonForm">
-        <div *ngIf="editClicked">
+      <form class="edit-person-form" *ngIf="selectedPerson$ | async as person">
+        <div>
           <div>
             <mat-form-field appearance="fill">
               <mat-label>Firstname</mat-label>
-              <input
-                matInput
-                autocomplete="false"
-                formControlName="firstname"
-              />
+              <input [value]="person.name" matInput autocomplete="false" />
             </mat-form-field>
           </div>
           <div>
             <mat-form-field appearance="fill">
               <mat-label>Surname</mat-label>
-              <input matInput autocomplete="false" formControlName="surname" />
+              <input matInput autocomplete="false" [value]="person.surname" />
             </mat-form-field>
           </div>
           <div>
             <mat-form-field appearance="fill">
               <mat-label>Age</mat-label>
-              <input matInput type="number" formControlName="age" />
+              <input matInput type="number" [value]="person.age" />
             </mat-form-field>
           </div>
 

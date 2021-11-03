@@ -1,15 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Country } from './models/country.model';
-import {
-  countriesSelector,
-  CountryState,
-  selectedCountrySelector,
-} from './store/countries.reducer';
-
-import * as CountriesActions from './store/countries.actions';
 import { tap } from 'rxjs/operators';
 
 @Component({
@@ -33,16 +25,7 @@ export class CountriesComponent implements OnInit {
   changedCapital!: string;
   _id!: string;
 
-  constructor(private store: Store<CountryState>) {
-    this.countries$ = this.store.select(countriesSelector);
-    this.selectedCountry$ = this.store.select(selectedCountrySelector).pipe(
-      tap((country) => {
-        this.editCountryForm.get('country')?.setValue(country?.country);
-        this.editCountryForm.get('capital')?.setValue(country?.capital);
-        this.editCountryForm.get('_id')?.setValue(country?._id);
-      })
-    );
-  }
+  constructor() {}
 
   ngOnInit() {
     // Add Country Form
@@ -68,9 +51,6 @@ export class CountriesComponent implements OnInit {
         })
       )
       .subscribe();
-
-    // Load Countries
-    this.store.dispatch(CountriesActions.loadCountries());
   }
 
   addCountry() {
@@ -79,31 +59,13 @@ export class CountriesComponent implements OnInit {
       capital: this.countriesForm.value.capital,
       _id: '',
     };
-
-    this.store.dispatch(CountriesActions.addCountry(country));
   }
 
-  editCountry(country: Country) {
-    this.store.dispatch(CountriesActions.selectCountry({ country }));
-  }
+  editCountry(country: Country) {}
 
-  deleteCountry(country: Country) {
-    this.store.dispatch(CountriesActions.deleteCountry({ id: country._id }));
-  }
+  deleteCountry(country: Country) {}
 
-  saveChanges() {
-    this.store.dispatch(
-      CountriesActions.editCountry({
-        country: {
-          country: this.changedCountry,
-          capital: this.changedCapital,
-          _id: this._id,
-        },
-      })
-    );
-  }
+  saveChanges() {}
 
-  discardChanges() {
-    this.store.dispatch(CountriesActions.selectCountry({ country: undefined }));
-  }
+  discardChanges() {}
 }
